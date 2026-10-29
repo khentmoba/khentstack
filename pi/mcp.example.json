@@ -1,0 +1,31 @@
+{
+  "mcpServers": {
+    "tinyfish": {
+      "url": "https://agent.tinyfish.ai/mcp",
+      "headers": {
+        "X-API-Key": "${TINYFISH_API_KEY}"
+      }
+    },
+    "discord": {
+      "command": "node",
+      "args": [
+        "~/.mcp/mcp-discord/build/index.js"
+      ],
+      "env": {
+        "DISCORD_TOKEN": "${DISCORD_TOKEN}"
+      }
+    },
+    "cloudflare": {
+      "url": "https://mcp.cloudflare.com/mcp"
+    },
+    "telegram": {
+      "command": "node",
+      "args": [
+        "~/.mcp/telegram-bot-api-mcp/run-mcp.mjs"
+      ],
+      "env": {
+        "TELEGRAM_META_MODE": "true"
+      }
+    }
+  }
+}

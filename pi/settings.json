@@ -1,0 +1,57 @@
+{
+  "defaultTools": [
+    "+codemode"
+  ],
+  "theme": "dark",
+  "defaultProvider": "magpie",
+  "defaultModel": "codex/gpt-6.1-sol",
+  "defaultThinkingLevel": "high",
+  "packages": [
+    "npm:@ff-labs/pi-fff",
+    {
+      "source": "npm:@juicesharp/rpiv-ask-user-question",
+      "extensions": []
+    },
+    "npm:pi-agent-browser-native",
+    "npm:pi-codemode-toggle",
+    "npm:pi-cached-compaction"
+  ],
+  "enabledModels": [
+    "experiential-labs/deepseek-v4.1-flash-uncensored",
+    "experiential-labs/deepseek-v4.1-flash-1017",
+    "experiential-labs/glm-5.3-flash-uncensored",
+    "openai-codex/gpt-6.1-sol",
+    "openai-codex/gpt-6-luna",
+    "magpie/codex/gpt-6.1-sol"
+  ],
+  "tuiMode": "regular",
+  "showCacheMissNotices": false,
+  "modelThinkingLevels": {
+    "opencode/muse-spark-1.3-contributor-free": "xhigh",
+    "opencode/space-bunny-free": "max",
+    "opencode/muse-spark-1.3": "max",
+    "opencode-go/muse-spark-1.3-contributor": "xhigh",
+    "meta/muse-spark-1.3-contributor": "max",
+    "meta/muse-spark-1.3": "max",
+    "cline/z-ai/glm-5.3-flash": "max",
+    "nvidia/deepseek-ai/deepseek-v4.1-flash": "max",
+    "experiential-labs/deepseek-v4.1-flash-1017": "high",
+    "experiential-labs/deepseek-v4.1-flash-uncensored": "high",
+    "experiential-labs/glm-5.3-flash-uncensored": "high"
+  },
+  "showHardwareCursor": false,
+  "skills": [
+    "-~/.agents/skills/remotion-captions",
+    "-~/.agents/skills/remotion-create",
+    "-~/.agents/skills/remotion-docs",
+    "-~/.agents/skills/remotion-interactivity",
+    "-~/.agents/skills/remotion-maps",
+    "-~/.agents/skills/remotion-markup",
+    "-~/.agents/skills/remotion-multimedia",
+    "-~/.agents/skills/remotion-render",
+    "-~/.agents/skills/remotion-saas",
+    "-~/.agents/skills/remotion-studio",
+    "-~/.agents/skills/remotion-upgrade",
+    "-~/.agents/skills/use-tinyfish"
+  ]
+}

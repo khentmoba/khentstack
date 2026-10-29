@@ -1,0 +1,36 @@
+# Local credentials and overrides
+.env
+.env.*
+!.env.example
+*.local.json
+auth.json
+mcp-auth.json
+mcp.json
+models.json
+secrets/
+*.pem
+*.key
+
+# Pi runtime data
+sessions/
+sessions-archive/
+memories/
+projects-memory/
+pi-hermes-memory/
+*.sqlite
+*.sqlite-*
+*.jsonl
+*.log
+
+# Dependencies, caches, backups, and downloaded tools
+node_modules/
+.pi/
+.cache/
+__pycache__/
+*.pyc
+*.bak
+*.bak-*
+*.backup
+*.exe
+.DS_Store
+Thumbs.db
