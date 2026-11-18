@@ -9,7 +9,7 @@ Do the same work as `full-send`, but stop with the PR ready for the user to merg
 Never merge it.
 
 Read [full-send](../full-send/SKILL.md) and follow its workflow, proof rules,
-review, and babysitting steps. An explicit "full stop" request authorizes that
+`review-loop` review, and babysitting steps. An explicit "full stop" request authorizes that
 work without a separate "full send" request. That includes full-send's
 testing permission. A "full stop" request is the permission for the test
 methods Proof needs, even when a project file says to ask first, for
@@ -30,18 +30,19 @@ cannot prevent automatic merging, report the blocker before proceeding.
 
 Use full-send's merge gate as the readiness check. Replace its merge and
 final report steps with a handoff. Proof and review must cover the final diff;
-recheck behavior changes and meaningful conflict fixes before handoff.
+recheck behavior changes and meaningful conflict fixes before handoff. A
+recheck continues the same `review-loop` ledger, so ignored and closed
+findings stay closed and are not posted again.
 
-Fetch the target branch and check the live PR's head, base, checks, reviews,
+Fetch the target branch and check the live PR's head, base, checks,
 and mergeability. Confirm it is open, not a draft, and not set to merge
 without the user. If someone else merged it, report that instead.
 
 - **Ready to merge:** the merge gate passes. Leave the PR open and unmerged.
-- **Waiting for required approval:** only human approval remains. Confirm
-  that this is the actual blocker.
 - **Blocked:** explain what prevents readiness, what you tried, and what is
   needed. Follow full-send's rules for asking the user.
 
 In T3 Code, call `unwatch_pull_request` before the handoff or a question.
-Report the PR link, final head, verdict, proof, reviewer outcome, and remaining
+Report the PR link, final head, verdict, proof, `review-loop` outcome
+(rounds, fixed, declined, and ignored findings, any step back), and remaining
 risks. State whether the PR is still open and unmerged.

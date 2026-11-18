@@ -11,8 +11,25 @@ right.
 ## Waiting
 
 Never write your own watcher, polling loop, or `sleep` loop. Use one watcher
-per PR: `watch_pull_request` in T3 Code, `pr-wait` everywhere else. Never run
-both on the same PR. Every watcher on a GitHub account shares one rate limit.
+per PR: `watch_pull_request` in T3 Code, `dsh-github-flow` + `schedule_create` in DeepSeek Harness, `pr-wait` everywhere else. Never run
+multiple watchers on the same PR. Every watcher on a GitHub account shares one rate limit.
+
+### In DeepSeek Harness: `dsh-github-flow` + `schedule_create`
+
+1. **Check CI and Reviews**:
+   - Call `github_pr(action: "checks", pr_number: <pr>)` to read check runs (pass, fail, pending).
+   - Call `github_pr(action: "status", pr_number: <pr>)` to check merge conflicts.
+2. **Sleep / Wake Cycle (Non-blocking)**:
+   - While checks are pending or in-progress, do not loop or sleep.
+   - Call `schedule_create` (e.g., `after_seconds: 45`, `title: "Check PR #<pr> CI"`, `prompt: "Check CI for PR #<pr> via github_pr(action: 'checks'). If still running, schedule another check in 45s. If all green, proceed to merge or handoff. If failed, diagnose and auto-fix."`).
+   - End your turn quietly. DSH will deliver the prompt when due.
+3. **Autonomous Auto-Fixing on Failure**:
+   - When a check fails, call `github_task(action: "diagnose_ci", pr_number: <pr>)` or `github_run(action: "log_failed", run_id: <run_id>)` to extract the exact error lines and affected source files.
+   - Inspect the code, apply the targeted fix using `edit`, test locally, commit (`git commit`), and push (`git push`).
+   - Schedule another check after 45s with `schedule_create` and wait for the new CI run.
+4. **Completion**:
+   - When all required checks pass, clean up any active reminders with `schedule_delete`.
+   - If authorized to merge (e.g. under `full-send`), merge with `github_pr(action: "merge", pr_number: <pr>, confirm: true)`. If under `full-stop`, leave open and report ready to merge.
 
 ### In T3 Code: `watch_pull_request`
 
