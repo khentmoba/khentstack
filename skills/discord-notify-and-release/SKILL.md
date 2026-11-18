@@ -44,8 +44,9 @@ A request to edit these instructions does not authorize a live release or post.
    commit, merge, push, or tag automatically.
 2. Update version sources before version-dependent builds using the project's
    mechanism. Follow its required checks and merge order. Use explicit task files
-   when committing; merge/push only as authorized by the request and project rules.
-   Reuse existing PR workflows when required rather than bypassing them.
+   when committing. Reuse existing PR workflows when required rather than
+   bypassing them. Continue through the merge described in **Merge the release PR**
+   below; push only as the request and project rules allow.
 3. Build/package from the intended release commit and configuration, or reuse
    artifacts whose provenance matches them. Use the project's actual artifact
    types and platforms; derive product names, branches, paths, and release targets
@@ -62,6 +63,29 @@ A request to edit these instructions does not authorize a live release or post.
    stop if delivery cannot be determined. Edit an identified existing post when
    correcting a release; remove duplicates only when authorized.
 
+## Merge the release PR
+
+A release request is the user's explicit authorization to merge the PR that
+carries this release, including where a project workflow says merging needs
+separate approval. Merge it and continue publishing in the same task instead of
+stopping to ask. Use the project's merge method (squash, merge commit, or
+rebase) and its PR skill when one exists.
+
+Merge only when all of these hold:
+
+- The PR contains the release changes (version bump, changelog, release fixes)
+  and nothing unrelated the user has not seen.
+- Required checks are green. Wait for pending checks; fix failures caused by the
+  release changes, then wait again.
+- The PR is mergeable: no conflicts, no requested changes, branch protection
+  satisfied without admin override or force-push.
+
+If any condition fails and you cannot fix it within the release scope, stop and
+report the blocker. After merging, sync the local default branch, confirm the
+merge commit is the release ref, and run publication from it (tag, CI release
+trigger, or build). This authorization covers only the release PR; other open
+PRs still need their own approval, and a notification-only request merges nothing.
+
 Use the project's configured credentials through its environment/secret store or
 ignored local configuration. Keep tokens and webhook URLs out of source, command
 output, payload previews, and responses. If a required target or credential is
@@ -72,11 +96,12 @@ missing, finish the local preparation and report exactly what remains blocked.
 Use the same release layout across projects, filling values from the real release:
 
 - Sender: `<Product> Release Bot`, unless project branding specifies another name.
-- Content: `New Release: **<Product> <Version>** is now available!` followed by
-  a short instruction for the actual attachment, download link, or deployment.
+- Content: `New Release: **<Product> <Version>** is now available!` Do not include
+  instructions (such as download, install, open, or update instructions).
 - Embed title: `Release: <Product> <Version>`.
 - Embed color: blue `#4296FA` (decimal `4363994`).
-- Description: one short sentence explaining how to use the release.
+- Description: one short sentence summarizing the release, without download or
+  installation instructions.
 - Inline fields: `Version`; `Configuration` when meaningful (actual platform/build);
   and `Attached File` with filename and size, or a clearly named download/visit link.
   List multiple artifacts only when the release actually provides them.
@@ -115,6 +140,6 @@ report that gap rather than inventing generic improvements.
 
 ## Completion
 
-Report the version and release commit, publication/artifact URLs, Discord message
+Report the version and release commit, the merged release PR URL when there was one, publication/artifact URLs, Discord message
 link or ID when available, checks performed, and any remaining failure separately.
 An upload confirms delivery; claim install/update/runtime success only when tested.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Full Refactor"
+  short_description: "Refactor a whole codebase simpler with proven zero behavior change, as unmerged stacked PRs"
+  default_prompt: "Use $full-refactor to refactor this codebase simpler without changing what it does, and leave the PRs for me to merge."

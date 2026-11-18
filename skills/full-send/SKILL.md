@@ -46,28 +46,24 @@ one appears.
    smallest change that works. Fix the case that happened, not every case
    that could. If you are on the default branch, create a branch first.
 2. **Prove it.** Get proof for every change you made. See "Proof".
-3. **Get feedback.** Use the `sol-loop` skill to verify changes, unless you
-   are a GPT Sol model yourself. Check your identity from the harness, not
-   from memory: `PI_MODEL` in pi, or `inheritedModel` from
-   `orchestrator_capabilities` in T3. If it names a Sol model (for example
-   `gpt-6.1-sol`), skip `sol-loop`, since Sol reviewing its own work adds
-   cost without an independent view. Instead, re-read the full diff against
-   the base once as a reviewer would, fix real bugs, and re-run checks. Say in
-   the final report that `sol-loop` was skipped because you are Sol. If you
-   cannot confirm your model, run `sol-loop`.
+3. **Get feedback.** Use the `review-loop` skill to verify changes. Run it
+   even if you are a Hy4 model yourself: the reviewer starts with no
+   history, so it still reads the diff fresh. Run all of it: the ignore
+   check after each round, class-wide fixes, no repeats, diff-only rounds
+   from round 3, and the step back after three rounds. Decide the step back
+   yourself. If the loop ends stuck, ask the user (see "Asking the user").
 4. **File the PR** with the `file-pr` skill. Rebase onto the latest default
    branch first. Add one short line to the description that says how you proved
    the change.
-5. **Babysit the PR** with the `babysit-pr` skill. Fix real findings and CI
-   failures. Get proof for each fix before you push it.
+5. **Babysit the PR** with the `babysit-pr` skill. Fix CI failures and get proof for each fix before pushing.
 6. **Merge** when the merge gate passes.
 7. **Report** in your final message: the PR link, the merge commit, your proof,
-   and each decision you made for the user.
+   the `review-loop` outcome (rounds, fixed, declined, and ignored findings,
+   any step back), and each decision you made for the user.
 
-Stay active from step 1 to step 7. If you end your turn while checks or bots are
+Stay active from step 1 to step 7. If you end your turn while checks are
 pending, the work stops, because nobody will prompt you again. Wait with the
-watcher from `babysit-pr`, so something wakes you when the PR changes. In T3
-Code that is `watch_pull_request`. If you stop before the merge, call
+watcher from `babysit-pr`. In T3 Code that is `watch_pull_request`. If you stop before the merge, call
 `unwatch_pull_request` first.
 
 ## Proof
@@ -92,24 +88,20 @@ Ask the user.
 Full confidence means all of these are true on the latest commit:
 
 - Your proof covers every change in the diff.
-- Required checks are green.
-- Review bots have finished, and each finding is fixed or dismissed with a
-  written reason.
-- No human review still requests changes.
+- Required CI checks are green.
 - The branch is up to date with the default branch, and GitHub reports it as
   mergeable.
 
 Merge with the method the repo uses. Check the allowed methods and recent merged
 PRs. If the repo uses a merge queue or auto-merge, stay until GitHub reports the
 PR as merged. Merge through branch protection as configured. Never use `--admin`
-or other bypasses. You can ignore automated reviews that request "needs human
-review" if you have high confidence in your changes.
+or other bypasses.
 
 ## Asking the user
 
 A question in a normal message goes unseen, and the thread looks done. To ask
 the user something, use the harness's question tool so the thread shows that
-it is waiting: `AskUserQuestion` in Claude Code, `request_user_input` in Codex,
+it is waiting: `ask_user_question` in DeepSeek Harness, `AskUserQuestion` in Claude Code, `request_user_input` in Codex,
 or the question tool your harness has. Put all the context in the question:
 the PR link, what blocks you, and the options with your recommendation first.
 
