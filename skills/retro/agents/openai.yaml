@@ -1,0 +1,5 @@
+interface:
+  display_name: "Retro"
+  short_description: "Conduct a retrospective across every T3 thread in the current project."
+policy:
+  allow_implicit_invocation: false
