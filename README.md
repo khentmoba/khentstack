@@ -10,7 +10,7 @@ This is a portable snapshot of my setup. Credentials, conversations, memory stor
 
 | Path | Contents |
 | --- | --- |
-| [`skills/`](skills/) | 41 top-level skills, including their scripts, references, and assets |
+| [`skills/`](skills/) | 42 top-level skills, including their scripts, references, and assets |
 | [`pi/settings.json`](pi/settings.json) | Package list, model preferences, thinking levels, terminal settings, and skill exclusions |
 | [`pi/extensions/`](pi/extensions/) | RTK command integration and T3 companions for questions, goals, and subagents |
 | [`pi/models.example.json`](pi/models.example.json) | Custom provider definitions and model overrides with credential references |

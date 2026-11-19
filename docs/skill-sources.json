@@ -18,6 +18,7 @@
   "performance": "~/.pi/agent/skills/performance",
   "pr-template": "~/.pi/agent/skills/pr-template",
   "product-launch-video": "~/.pi/agent/skills/product-launch-video",
+  "rate-loop": "~/.agents/skills/rate-loop",
   "remotion-best-practices": "~/.pi/agent/skills/remotion-best-practices",
   "remotion-captions": "~/.agents/skills/remotion-captions",
   "remotion-create": "~/.agents/skills/remotion-create",
