@@ -96,7 +96,20 @@ target: { providerInstanceId: "pi",
           options: { thinking: "low" } }
 ```
 
-Either route counts as Hy4 Flash Free. Keep the same route for the whole loop.
+Either route counts as Hy4 Flash Free. Keep the same route for the whole loop
+unless the quota fallback below applies.
+
+If the active route fails with a free-tier quota or rate-limit error ("Free
+usage limit reached", HTTP 429, or quota exhaustion), fall back automatically
+instead of skipping the review:
+
+1. Switch to the other Hy4 Flash Free route (`pi` if `opencode` hit quota, or
+   vice versa).
+2. If both Hy4 Flash Free routes hit quota or are unavailable, pick the
+   strongest available review/reasoning model from `orchestrator_capabilities`
+   (preferring a different provider/model than your own when available),
+   record the fallback and reason in the ledger and final report, and keep it
+   for the rest of the loop.
 
 Each pass blocks up to 4 minutes (under the 300s HTTP fetch limit). If
 `waitTimedOut: true` is returned, follow up with `t3_thread_wait`
@@ -104,16 +117,16 @@ Each pass blocks up to 4 minutes (under the 300s HTTP fetch limit). If
 `t3_thread_read` (`threadId: childThreadId`, `view: "messages"`). A pass can
 take 30 to 40 minutes total.
 
-If neither route lists Hy4 Flash Free, report the blocker. Do not
-substitute another model. Save `taskId`. New
+Only report a blocker if no capable model is available in
+`orchestrator_capabilities`. Save `taskId`. New
 `clientRequestId` per pass. `childThreadId` is storage, not the next
 target. Do not use `t3_thread_send`, `create_threads`, or
 `t3_thread_launch` for review.
 
 If T3 tools are not listed, try one direct capability call. Outside T3, use
-a native subagent only if it is set up to run Hy4 Flash Free, and keep its
-ID. If no route runs it, report the blocker. Do not
-substitute a model.
+a native subagent set up for Hy4 Flash Free (or the strongest available
+fallback on quota/429), and keep its ID. If no route is available, report the
+blocker.
 
 Do not edit scoped files while a pass runs. Do not poll or start a parallel
 reviewer. Timeout, error, or no reply is not approval. On timeout or failure,
@@ -128,8 +141,10 @@ Round 1 brief (T3 children get no history):
 ```
 Review only. Do not edit, commit, push, comment on PRs, or start subagents.
 Search only inside Repo. Never run find, grep, or rg against / or a drive root.
+On Windows PowerShell 5.1: use ; not &&, git grep not grep/rg/Select-String <dir>, and never > to write text files (UTF-16LE breaks read).
+Tool economy: use git ls-files <dir> instead of fffind "*" (caps at 5 matches); pass limit: 250 on read for >300-line files if a sidecar cap triggers.
 Repo: <abs path> Base: <sha> Intent: <intent> Out of scope: <scope> Checks: <results>
-See: git diff <base> [-- <paths>]; git status --short (read untracked).
+See: git diff <base> [-- <paths>] (if rtk compacts output, run rtk bypass git diff ... or RTK_DISABLED=1 git diff ... on POSIX); git status --short (read untracked).
 Read surrounding code. Find bugs, broken callers, mismatch with intent.
 Skip style unless it hides a bug. Hold to the smallest change. Flag code,
 tests, or guards the intent does not need. Other paths, rare cases, small
@@ -154,8 +169,10 @@ answer anything:
 ```
 Triage only. Do not edit, commit, push, comment on PRs, or start subagents.
 Search only inside Repo. Never run find, grep, or rg against / or a drive root.
+On Windows PowerShell 5.1: use ; not &&, git grep not grep/rg/Select-String <dir>, and never > to write text files (UTF-16LE breaks read).
+Tool economy: use git ls-files <dir> instead of fffind "*" (caps at 5 matches); pass limit: 250 on read for >300-line files if a sidecar cap triggers.
 Repo: <abs path> Base: <sha> Intent: <intent> Out of scope: <scope>
-See: git diff <base> [-- <paths>]. Read the code each finding points at.
+See: git diff <base> [-- <paths>] (if rtk compacts output, run rtk bypass git diff ... or RTK_DISABLED=1 git diff ... on POSIX). Read the code each finding points at.
 Findings: <this round's findings verbatim>
 For each finding answer one question: can the author ignore this comment?
 yes = wrong, already handled, out of scope, or not worth a change for this intent.
