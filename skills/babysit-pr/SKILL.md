@@ -36,7 +36,10 @@ multiple watchers on the same PR. Every watcher on a GitHub account shares one r
 Handle the existing checks and comments first. Then call
 `watch_pull_request` and end your turn. T3 Code wakes you with a message when
 a check fails, the required checks pass, someone comments or reviews, or the
-branch conflicts.
+branch conflicts. When calling `watch_pull_request`, `ci_logs`, or
+`pull_request_read`/`review`/`update`/`respond`/`merge`, pass `repository`
+(`owner/repo`) alongside `number` (`link_pull_request` and
+`read_pull_request_guide` accept `url`).
 
 - **Only the thread that owns the PR watches it.** If you are a delegated
   child task (a reviewer, a Sol round, any `delegate_task` child), never call
@@ -128,7 +131,9 @@ user, and ask before closing the PR unless closure was explicitly authorized.
 If nothing has changed, stay quiet rather than posting filler comments. Stop
 when `pr-wait` exits 0, or in T3 Code when the merge gate passes on the latest
 head. Merge only when the user explicitly requested it;
-otherwise report that the PR is ready. Right before a merge, run `git fetch` and
-check the PR again. Never merge when it is BEHIND or DIRTY, or when base commits
-that landed after the last green run touch this PR's files. Rebase, push, and
-wait for green again.
+otherwise report that the PR is ready. When merging via CLI, use
+`gh pr merge --subject` (not `--title`), and omit `--delete-branch` inside a
+git worktree where the default branch is already checked out elsewhere. Right
+before a merge, run `git fetch` and check the PR again. Never merge when it is
+BEHIND or DIRTY, or when base commits that landed after the last green run
+touch this PR's files. Rebase, push, and wait for green again.

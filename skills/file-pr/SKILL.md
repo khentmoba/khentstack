@@ -118,9 +118,11 @@ secrets and private details.
 
 Stage explicit task files, commit, push the topic branch, and create/update the PR
 against the identified base (use `gh pr create --body-file` when GitHub CLI is the
-repo's tool). Open a real PR rather than a draft so review bots run. If
-`gh pr create` fails because the GraphQL rate limit is used up, open it through
-REST with
+repo's tool). When calling T3 `pull_request_read`/`review`/`update`/`respond`/`merge`
+or `ci_logs`, pass `repository` (`owner/repo`) alongside `number` (`link_pull_request`
+and `read_pull_request_guide` accept `url`). Open a real PR rather than a
+draft so review bots run. If `gh pr create` fails because the GraphQL rate limit
+is used up, open it through REST with
 `gh api repos/<owner>/<repo>/pulls -f title=... -f head=... -f base=... -F body=@<file>`.
 
 Inspect the resulting base/head and diff. Report any blocker rather than silently
@@ -153,9 +155,11 @@ blocked—not merely absent. Return the PR URL, check status, and merge risks.
 
 ## 6. Only when merging/releasing is explicitly requested
 
-Honor the repo's merge policy and required checks. After merging, identify the
-exact merged SHA and validate any required checks on that SHA; squash/rebase merges
-can produce a different commit from the PR head.
+Honor the repo's merge policy and required checks. When merging via CLI, use
+`gh pr merge --subject` (not `--title`), and omit `--delete-branch` inside a
+git worktree where the default branch is already checked out elsewhere. After
+merging, identify the exact merged SHA and validate any required checks on that
+SHA; squash/rebase merges can produce a different commit from the PR head.
 
 Build/sign the release once from a clean checkout of that commit with the agreed
 version. Reuse an existing artifact only if provenance matches that exact commit
