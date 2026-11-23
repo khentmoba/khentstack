@@ -47,7 +47,7 @@ one appears.
    that could. If you are on the default branch, create a branch first.
 2. **Prove it.** Get proof for every change you made. See "Proof".
 3. **Get feedback.** Use the `review-loop` skill to verify changes. Run it
-   even if you are a Hy4 model yourself: the reviewer starts with no
+   even if you are a DeepSeek model yourself: the reviewer starts with no
    history, so it still reads the diff fresh. Run all of it: the ignore
    check after each round, class-wide fixes, no repeats, diff-only rounds
    from round 3, and the step back after three rounds. Decide the step back

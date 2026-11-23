@@ -6,12 +6,12 @@ description: Use when the user says "review loop".
 # review-loop
 
 This is a workflow for making your code changes more correct before (or
-sometimes after) filing a pull request. tl;dr - use Hy4 Flash Free at its
-highest reasoning to review your code in a loop, with a triage pass that marks
-findings you can ignore.
+sometimes after) filing a pull request. tl;dr - use DeepSeek V4.1 Flash
+(Mistral) via Pi at its highest reasoning to review your code in a loop, with a
+triage pass that marks findings you can ignore.
 
-Make the most minimal possible changes to appease the Hy4 reviewers. Be
-careful of scope creep and don't be scared to push back.
+Make the most minimal possible changes to appease the DeepSeek V4.1 Flash
+reviewers. Be careful of scope creep and don't be scared to push back.
 
 ## Loop
 
@@ -75,37 +75,37 @@ Record `T<n>` in the ledger. The round-to-round diff is
 
 ## 2. Start the reviewer
 
-Use Hy4 Flash Free at its highest reasoning unless the user names another
-model or effort. Run it even if you are Hy4 yourself; the reviewer starts with
-no history. In T3, call `orchestrator_capabilities` once to confirm it is
-available, then use `delegate_task` for every review and triage pass
-(`role: "review"`, `mode: "wait"`, `timeoutMs: 240000`) with:
-
-```
-target: { providerInstanceId: "opencode",
-          model: "opencode/hy4-flash-free",
-          options: { variant: "high" } }
-```
-
-If OpenCode is missing or the model is not listed, use the Pi route for the
-same model instead (its only effort is `low`):
+Use DeepSeek V4.1 Flash (Mistral) via Pi at its highest reasoning unless the
+user names another model or effort. Run it even if you are DeepSeek yourself;
+the reviewer starts with no history. In T3, call `orchestrator_capabilities`
+once to confirm it is available, then use `delegate_task` for every review and
+triage pass (`role: "review"`, `mode: "wait"`, `timeoutMs: 240000`) with:
 
 ```
 target: { providerInstanceId: "pi",
-          model: "magpie/our-free-model/hy4-flash-free",
-          options: { thinking: "low" } }
+          model: "magpie/mistral/deepseek-v4-1-flash-1017",
+          options: { thinking: "max" } }
 ```
 
-Either route counts as Hy4 Flash Free. Keep the same route for the whole loop
-unless the quota fallback below applies.
+If Pi is missing or the model is not listed, use the OpenCode route for
+DeepSeek V4.1 Flash at its highest reasoning instead:
+
+```
+target: { providerInstanceId: "opencode",
+          model: "opencode/deepseek-v4.1-flash-free",
+          options: { variant: "max" } }
+```
+
+Either route counts as DeepSeek V4.1 Flash. Keep the same route for the whole
+loop unless the quota fallback below applies.
 
 If the active route fails with a free-tier quota or rate-limit error ("Free
 usage limit reached", HTTP 429, or quota exhaustion), fall back automatically
 instead of skipping the review:
 
-1. Switch to the other Hy4 Flash Free route (`pi` if `opencode` hit quota, or
-   vice versa).
-2. If both Hy4 Flash Free routes hit quota or are unavailable, pick the
+1. Switch to the other DeepSeek V4.1 Flash route (`opencode` if `pi` hit quota,
+   or vice versa).
+2. If both DeepSeek V4.1 Flash routes hit quota or are unavailable, pick the
    strongest available review/reasoning model from `orchestrator_capabilities`
    (preferring a different provider/model than your own when available),
    record the fallback and reason in the ledger and final report, and keep it
@@ -124,7 +124,7 @@ target. Do not use `t3_thread_send`, `create_threads`, or
 `t3_thread_launch` for review.
 
 If T3 tools are not listed, try one direct capability call. Outside T3, use
-a native subagent set up for Hy4 Flash Free (or the strongest available
+a native subagent set up for DeepSeek V4.1 Flash (or the strongest available
 fallback on quota/429), and keep its ID. If no route is available, report the
 blocker.
 
